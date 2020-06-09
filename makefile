@@ -1,18 +1,56 @@
-test: face.mdl main.py matrix.py mdl.py display.py draw.py gmath.py
-	python main.py face.mdl
+OBJECTS= symtab.o print_pcode.o matrix.o script.o display.o draw.o gmath.o stack.o mesh.o
+CFLAGS= -g
+LDFLAGS= -lm
+CC= gcc
 
-lint:
-ifneq (, $(shell which flake8))
-	flake8 ./graphics-engine --count --select=E9,F63,F7,F82 --show-source --statistics
-endif
+run: parser scripts/simple_anim.mdl
+	./mdl scripts/simple_anim.mdl
 
-format:
-ifneq (, $(shell which yapf))
-	yapf -r -i --style pep8 -p -vv ./graphics-engine
-endif
+parser: lex.yy.c y.tab.c y.tab.h $(OBJECTS)
+	gcc -o mdl $(CFLAGS) lex.yy.c y.tab.c $(OBJECTS) $(LDFLAGS)
+
+lex.yy.c: mdl.l y.tab.h 
+	flex -I mdl.l
+
+y.tab.c: mdl.y symtab.h parser.h
+	bison -d -y mdl.y
+
+y.tab.h: mdl.y 
+	bison -d -y mdl.y
+
+symtab.o: symtab.c parser.h matrix.h
+	gcc -c $(CFLAGS) symtab.c
+
+print_pcode.o: print_pcode.c parser.h matrix.h
+	gcc -c $(CFLAGS) print_pcode.c
+
+matrix.o: matrix.c matrix.h
+	gcc -c $(CFLAGS) matrix.c
+
+script.o: script.c parser.h print_pcode.c matrix.h display.h ml6.h draw.h stack.h mesh.h
+	gcc -c $(CFLAGS) script.c
+
+display.o: display.c display.h ml6.h matrix.h
+	$(CC) $(CFLAGS) -c display.c
+
+draw.o: draw.c draw.h display.h ml6.h matrix.h gmath.h
+	$(CC) $(CFLAGS) -c draw.c
+
+gmath.o: gmath.c gmath.h matrix.h
+	$(CC) $(CFLAGS) -c gmath.c
+
+stack.o: stack.c stack.h matrix.h
+	$(CC) $(CFLAGS) -c stack.c
+
+mesh.o: mesh.c mesh.h draw.h matrix.h
+	$(CC) $(CFLAGS) -c mesh.c
 
 clean:
-	rm *pyc *out parsetab.py
+	rm y.tab.c y.tab.h
+	rm lex.yy.c
+	rm -rf mdl.dSYM
+	rm *.o *~
 
-clear:
-	rm *pyc *out parsetab.py *ppm
+erase: clean
+	rm mdl
+	rm -r anim/*

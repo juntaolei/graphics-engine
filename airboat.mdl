@@ -1,0 +1,11 @@
+frames 30
+basename spinning_airboat
+light right 2 2 1 250 250 250
+constants red 1 0.9 0.1 0 0.4 0 0 0.4 0
+push
+move 250 250 0
+scale 30 30 30
+rotate y 360 spinny
+rotate z 360 spinny
+mesh red :airboat.obj
+vary spinny 0 29 0 1

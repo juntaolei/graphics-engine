@@ -1,0 +1,21 @@
+basename flyover
+frames 60
+light l0 1 1 1 225 0 0
+light l1 -1 1 1 0 0 225
+light l2 0 -1 1 0 225 0
+light l3 0 1 1 255 255 255
+constants silver 0.7490196078 0.2901960784 0.8784313725 0.7490196078 0.2901960784 0.8784313725 0.7490196078 0.2901960784 0.8784313725
+push
+move 250 50 0
+scale 5 5 5
+rotate y -20
+mesh silver :skyscraper.obj
+push
+move 50 25 0
+move -300 150 0 fly
+rotate y 50
+rotate z -30 
+mesh silver :shuttle.obj
+pop
+pop
+vary fly 0 59 0 1

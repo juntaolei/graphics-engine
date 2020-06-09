@@ -1,0 +1,16 @@
+light l0 1 1 1 255 0 0
+light l1 -1 1 1 0 0 255
+light l2 0 -1 1 0 255 0
+light l3 0 1 1 255 255 255
+constants shiny_white 0.1 0.3 0.7 0.1 0.3 0.7 0.1 0.3 0.7
+constants matte_white 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0
+constants spot_white 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0
+constants even_white 0.0 0.5 0.5 0.0 0.5 0.5 0.0 0.5 0.5
+push
+move 275 225 0
+rotate y 180
+rotate x 360
+scale 2.5 2.5 2.5
+mesh even_white :teapot.obj
+save teapot.png
+display
